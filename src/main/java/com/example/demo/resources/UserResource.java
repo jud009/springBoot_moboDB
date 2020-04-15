@@ -19,7 +19,6 @@ import com.example.demo.domain.User;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.services.UserService;
 
-
 @RestController
 @RequestMapping(value = "/users")
 public class UserResource {
@@ -39,15 +38,19 @@ public class UserResource {
 		Optional<User> obj = userService.findById(id);
 		return ResponseEntity.ok().body(new UserDTO(obj.get()));
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody UserDTO dto){
-		User user = userService.fromDto(dto); 
-		user = userService.insert(user); 
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri(); 
-		return ResponseEntity.created(uri).build(); 
+	public ResponseEntity<Void> insert(@RequestBody UserDTO dto) {
+		User user = userService.fromDto(dto);
+		user = userService.insert(user);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
-	
-	
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable String id) {
+		userService.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 
 }
